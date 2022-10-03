@@ -14,7 +14,7 @@ import { ref } from "vue";
 export default {
   name: "TimerProgress",
   setup() {
-    const timer = ref("5:12");
+    const timer = ref("0:12");
     let isTimerRunning = ref(false);
     let clockInterval: number;
 
@@ -35,6 +35,9 @@ export default {
       timer.value = `${newMinutes}:${newSeconds < 10 ? 0 : ""}${
         newSeconds < 0 ? 59 : newSeconds
       }`;
+      if (newMinutes === 0 && newSeconds === 0) {
+        stopTimer();
+      }
     };
 
     const startTimer = () => {
