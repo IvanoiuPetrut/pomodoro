@@ -1,6 +1,8 @@
 <template>
-  <h1>Pomodoro</h1>
-  <TimerProgress></TimerProgress>
+  <div>
+    <h1>Pomodoro</h1>
+    <TimerProgress></TimerProgress>
+  </div>
 </template>
 
 <script lang="ts">
@@ -13,3 +15,5 @@ export default {
   },
 };
 </script>
+
+<style src="./assets/tailwind.css"></style>
