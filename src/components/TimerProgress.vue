@@ -3,7 +3,7 @@
     <p
       class="text-6xl font-medium text-center tracking-wider text-emerald-600 drop-shadow"
     >
-      {{ timer }}
+      {{ timer.minutes }}:{{ timer.seconds }}
     </p>
     <div class="flex gap-8">
       <button
@@ -34,28 +34,32 @@ import { ref } from "vue";
 export default {
   name: "TimerProgress",
   setup() {
-    const timer = ref("25:00");
+    const timer = ref({
+      minutes: 25,
+      seconds: 10,
+    });
+
     let isTimerRunning = ref(false);
     let clockInterval: number;
 
     const handleStarPause = () => {
-      if (isTimerRunning.value) {
-        pauseTimer();
-        isTimerRunning.value = !isTimerRunning.value;
-      } else if (timer.value !== "0:00") {
+      console.log(isTimerRunning.value);
+      if (!isTimerRunning.value) {
         startTimer();
-        isTimerRunning.value = !isTimerRunning.value;
+        isTimerRunning.value = true;
+      } else {
+        pauseTimer();
+        isTimerRunning.value = false;
       }
     };
 
     const nextTick = () => {
-      const [minutes, seconds] = timer.value.split(":");
-      const newSeconds = parseInt(seconds) - 1;
-      const newMinutes = parseInt(minutes) - (newSeconds < 0 ? 1 : 0);
-      console.log(newMinutes, newSeconds);
-      timer.value = `${newMinutes}:${
-        newSeconds < 10 && newSeconds > 0 ? 0 : ""
-      }${newSeconds < 0 ? 59 : newSeconds}`;
+      const newSeconds = timer.value.seconds - 1;
+      const newMinutes = timer.value.minutes - (newSeconds < 0 ? 1 : 0);
+      timer.value = {
+        minutes: newMinutes,
+        seconds: newSeconds < 0 ? 59 : newSeconds,
+      };
       if (newMinutes === 0 && newSeconds === 0) {
         pauseTimer();
         isTimerRunning.value = false;
@@ -71,7 +75,10 @@ export default {
       if (isTimerRunning.value) {
         clearInterval(clockInterval);
         isTimerRunning.value = false;
-        timer.value = "25:00";
+        timer.value = {
+          minutes: 25,
+          seconds: 0,
+        };
       }
     };
 
