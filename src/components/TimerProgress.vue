@@ -7,14 +7,20 @@
     </p>
     <div class="flex gap-8">
       <button
-        @click="startPauseTimer"
+        @click="handleStarPause"
         class="text-2xl uppercase tracking-wider bg-emerald-400 py-2 w-28 rounded-lg pointer transition hover:bg-emerald-500"
       >
         <span v-if="isTimerRunning">Pause</span>
         <span v-else>Start</span>
       </button>
       <button
-        class="text-2xl uppercase tracking-wider bg-emerald-400 py-2 w-28 rounded-lg pointer transition hover:bg-emerald-500"
+        @click="stopTimer"
+        :class="{
+          'text-2xl uppercase tracking-wider bg-red-400 py-2 w-28 rounded-lg pointer transition hover:bg-red-500':
+            isTimerRunning,
+          'text-2xl uppercase tracking-wider bg-red-400 py-2 w-28 rounded-lg pointer transition hover:bg-red-500 opacity-50 cursor-not-allowed':
+            !isTimerRunning,
+        }"
       >
         Stop
       </button>
@@ -32,9 +38,9 @@ export default {
     let isTimerRunning = ref(false);
     let clockInterval: number;
 
-    const startPauseTimer = () => {
+    const handleStarPause = () => {
       if (isTimerRunning.value) {
-        stopTimer();
+        pauseTimer();
         isTimerRunning.value = !isTimerRunning.value;
       } else if (timer.value !== "0:00") {
         startTimer();
@@ -51,7 +57,7 @@ export default {
         newSeconds < 10 && newSeconds > 0 ? 0 : ""
       }${newSeconds < 0 ? 59 : newSeconds}`;
       if (newMinutes === 0 && newSeconds === 0) {
-        stopTimer();
+        pauseTimer();
         isTimerRunning.value = false;
       }
     };
@@ -62,6 +68,14 @@ export default {
     };
 
     const stopTimer = () => {
+      if (isTimerRunning.value) {
+        clearInterval(clockInterval);
+        isTimerRunning.value = false;
+        timer.value = "25:00";
+      }
+    };
+
+    const pauseTimer = () => {
       clearInterval(clockInterval);
     };
 
@@ -69,7 +83,8 @@ export default {
       timer,
       startTimer,
       stopTimer,
-      startPauseTimer,
+      pauseTimer,
+      handleStarPause,
       isTimerRunning,
     };
   },
