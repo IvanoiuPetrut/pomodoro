@@ -3,7 +3,7 @@
     <p
       class="text-6xl font-medium text-center tracking-wider text-emerald-600 drop-shadow"
     >
-      {{ timer.minutes }}:{{ timer.seconds }}
+      {{ workInterval.minutes }}:{{ workInterval.seconds }}
     </p>
     <div class="flex gap-8">
       <button
@@ -34,8 +34,12 @@ import { ref } from "vue";
 export default {
   name: "TimerProgress",
   setup() {
-    const timer = ref({
-      minutes: 25,
+    const workInterval = ref({
+      minutes: 0,
+      seconds: 20,
+    });
+    const pauseInterval = ref({
+      minutes: 0,
       seconds: 10,
     });
 
@@ -53,7 +57,9 @@ export default {
       }
     };
 
-    const nextTick = () => {
+    const nextTick = (timer: {
+      value: { seconds: number; minutes: number };
+    }) => {
       const newSeconds = timer.value.seconds - 1;
       const newMinutes = timer.value.minutes - (newSeconds < 0 ? 1 : 0);
       timer.value = {
@@ -64,18 +70,18 @@ export default {
         pauseTimer();
         isTimerRunning.value = false;
       }
+      return timer;
     };
 
     const startTimer = () => {
-      clockInterval = setInterval(nextTick, 1000);
-      console.log(clockInterval);
+      clockInterval = setInterval(nextTick, 1000, workInterval);
     };
 
     const stopTimer = () => {
       if (isTimerRunning.value) {
         clearInterval(clockInterval);
         isTimerRunning.value = false;
-        timer.value = {
+        workInterval.value = {
           minutes: 25,
           seconds: 0,
         };
@@ -87,7 +93,8 @@ export default {
     };
 
     return {
-      timer,
+      workInterval,
+      pauseInterval,
       startTimer,
       stopTimer,
       pauseTimer,
