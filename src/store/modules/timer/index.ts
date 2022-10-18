@@ -5,7 +5,7 @@ import { getters } from "./getter";
 import { mutations } from "./mutations";
 
 const state: TimerState = {
-  minutes: 0,
+  minutes: 30,
   seconds: 0,
   workIntervals: 0,
   timerType: "work",

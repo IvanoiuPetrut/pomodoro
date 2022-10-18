@@ -30,6 +30,8 @@
 
 <script lang="ts">
 import { ref } from "vue";
+import store from "../store";
+import { mapState } from "vuex";
 
 export default {
   name: "TimerProgress",
@@ -42,6 +44,22 @@ export default {
       minutes: 0,
       seconds: 10,
     });
+
+    let a = mapState(["timerType"]);
+    console.log(a);
+
+    // let b = mapState({
+    //   timerType: (state) => state.timer.timerType,
+    //   minutes: (state) => state.timer.minutes,
+    // });
+
+    // const isTimerRunning2 = mapState(["isTimerRunning"]);
+
+    console.log(store.state.version);
+    // console.log(store.state.isTimerRunning);
+    // console.log(this.$store.state.version);
+    // console.log(store.state.timer.isTimerRunning);
+    // console.log(this.$store.state.timer.isTimerRunning);
 
     let isTimerRunning = ref(false);
     let clockInterval: number;
